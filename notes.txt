@@ -1,0 +1,2 @@
+for dev dependency use -D
+Nodemon is a tool that helps with auto-reloading your Node.js application whenever you make changes to the code
