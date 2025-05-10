@@ -1,0 +1,1 @@
+#  A beginner-friendly repository to learn core backend concepts
