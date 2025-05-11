@@ -28,3 +28,187 @@ Successful responses (200 – 299)
 Redirection messages (300 – 399)
 Client error responses (400 – 499)
 Server error responses (500 – 599)
+
+mongoose-paginate-v2
+bcrypt -> for hashing passwords
+pre -> middleware
+
+🔐 What is JWT?
+JWT (JSON Web Token) is a secure way to transmit information between two parties — like a client and a server — in the form of a digitally signed token.
+
+✅ It is commonly used for:
+Authentication
+
+Authorization
+
+📦 Structure of a JWT
+A JWT has three parts, separated by dots (.):
+
+php-template
+Copy
+Edit
+<Header>.<Payload>.<Signature>
+1. Header (Metadata)
+Contains info about the type of token and signing algorithm.
+
+json
+Copy
+Edit
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+2. Payload (Data)
+Contains the actual information or claims (like user ID, role, etc.)
+
+json
+Copy
+Edit
+{
+  "userId": "12345",
+  "role": "admin"
+}
+3. Signature (Security)
+Used to verify the token wasn’t changed. It's created using the header + payload and a secret key.
+
+💡 Real-World Analogy
+Imagine JWT as a movie ticket:
+
+🎟️ The ticket (JWT) has information about you and your seat.
+
+✅ The cinema (server) checks it and lets you in — without asking for your ID every time.
+
+🔒 It has a signature or barcode (signature) that the cinema can verify.
+
+🧪 How JWT Works in Web Apps
+🧾 Step-by-step flow:
+Login: User logs in with email & password.
+
+Server generates JWT: After verifying the user, server creates and sends a JWT to the user.
+
+Client stores token: Usually in localStorage or cookie.
+
+User makes requests: The client sends JWT in the Authorization header.
+
+Server verifies JWT: If it's valid, user is allowed; otherwise, denied.
+
+
+
+🍪 Cookies
+Definition: Small pieces of data stored in the user’s browser.
+
+Purpose: Remember user preferences, session IDs, login info, etc.
+
+Created By: Server (usually), but can also be set by JavaScript.
+
+✅ Key Characteristics:
+Stored on the client-side (browser)
+
+Automatically sent with every HTTP request to the domain
+
+Can be made secure: HttpOnly, Secure, SameSite
+
+💡 Example:
+http
+Copy
+Edit
+Set-Cookie: sessionId=abc123; HttpOnly; Secure
+🛎️ Sessions
+Definition: A mechanism to store user data on the server between HTTP requests.
+
+Purpose: Keep track of logged-in users, shopping carts, etc.
+
+✅ Key Characteristics:
+Stored on the server-side
+
+Identified by a session ID (usually sent to the client as a cookie)
+
+More secure than storing everything in cookies
+
+🧠 Real-World Analogy:
+Imagine you go to a hotel:
+
+Cookie = Your keycard. It stores your room number.
+
+Session = The hotel's database. It knows everything about your stay (how long, your preferences, etc.).
+
+🔄 How They Work Together:
+You log in.
+
+Server creates a session, stores your info (e.g., user ID).
+
+Server sends back a cookie with a sessionId.
+
+On every request, your browser sends the sessionId cookie.
+
+Server uses that sessionId to retrieve your data from its session store.
+
+✅ Summary:
+Feature	Cookies	Sessions
+Stored on	Client (browser)	Server
+Size limit	~4KB	Can be large
+Security	Can be vulnerable if not secured	Safer (data not exposed to client)
+Use case	Small data, session ID	User login state, preferences
+
+
+
+🔄 What Are Aggregation Pipelines in MongoDB?
+An aggregation pipeline is a MongoDB framework that allows you to transform, filter, and analyze documents in a collection through a series of stages, much like a data processing pipeline.
+
+✅ Key Concepts
+Think of it as a data flow, where each stage processes documents and passes them to the next.
+
+Each stage is an operation like filtering, grouping, sorting, or calculating.
+
+Used for complex queries, analytics, data summarization, and reporting.
+
+🧱 Common Stages in the Pipeline
+Stage	Description
+$match	Filters documents (like a WHERE clause in SQL)
+$group	Groups documents and can calculate aggregates (like SUM, AVG, etc.)
+$sort	Sorts documents
+$project	Selects specific fields or transforms them
+$limit	Limits the number of output documents
+$skip	Skips a specified number of documents
+$lookup	Joins documents from another collection
+$unwind	Deconstructs arrays into multiple documents
+
+🧠 Real-World Example
+Say you have an orders collection:
+
+json
+Copy
+Edit
+{
+  "item": "Laptop",
+  "price": 1000,
+  "quantity": 2,
+  "category": "Electronics"
+}
+You want to know the total sales per category.
+
+js
+Copy
+Edit
+db.orders.aggregate([
+  {
+    $group: {
+      _id: "$category",
+      totalSales: { $sum: { $multiply: ["$price", "$quantity"] } }
+    }
+  }
+])
+🧾 Result:
+
+json
+Copy
+Edit
+[
+  { "_id": "Electronics", "totalSales": 2000 }
+]
+🧰 Why Use Aggregation Pipelines?
+Perform data analytics inside MongoDB — no need to fetch and process in app code.
+
+Efficient and fast for large-scale operations.
+
+Supports complex operations like filtering, reshaping, joining, and aggregating.
