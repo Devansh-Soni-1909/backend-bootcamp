@@ -1,2 +1,30 @@
 for dev dependency use -D
 Nodemon is a tool that helps with auto-reloading your Node.js application whenever you make changes to the code
+mostly for middlewares we use app.use()
+
+Middleware helps you handle common tasks during a request-response lifecycle without repeating code.
+
+🚗 Real-World Analogy: A Toll Booth Highway
+🛣 Scenario:
+Imagine you're driving your car on a highway that leads to a destination (just like a client sending a request to a server).
+
+Before you reach your destination (i.e., get the final response), you must pass through several checkpoints (middlewares) on the road:
+
+💡 Real-World Checkpoints ≈ Middleware
+Checkpoint on the Road	Equivalent Express Middleware	Purpose
+🚧 Toll Booth	express.json()	Checks if your vehicle (request body) is valid
+👮 Security Check	Authentication Middleware	Checks if you're authorized to enter
+🎫 Ticket Validation	Authorization Middleware	Checks if you're allowed to go to a VIP area
+🧾 Receipt Printing	Logger Middleware	Logs details about the journey
+🧰 Road Repair Detour	Error Handling Middleware	Redirects or shows an error if road is broken
+🏁 Destination	Final Route Handler	Sends the final response
+
+
+HTTP response status codes
+HTTP response status codes indicate whether a specific HTTP request has been successfully completed. Responses are grouped in five classes:
+
+Informational responses (100 – 199)
+Successful responses (200 – 299)
+Redirection messages (300 – 399)
+Client error responses (400 – 499)
+Server error responses (500 – 599)
