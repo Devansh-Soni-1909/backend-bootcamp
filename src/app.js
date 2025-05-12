@@ -15,4 +15,12 @@ app.use(express.static('public'));
 app.use(cookieParser()); // so that we can access req.cookies from users browser
 
 
-export default app;
+// Routes import 
+ import userRouter from './routes/user.routes.js';
+
+ // routes declaration
+ app.use("/api/v1/users",userRouter);
+
+
+
+export {app};
