@@ -77,7 +77,7 @@ userSchema.pre("save",async function(next){  // mongoose middleware
     if(!this.isModified("password")) return next(); // because if password is not modified, then we don't want to hash it again 
 
     
-    this.password = bcrypt.hash(this.password,10) // suppose user changes the avatar and resave it then we dont want to hash the password again, so we just return next()
+    this.password = await bcrypt.hash(this.password,10) // suppose user changes the avatar and resave it then we dont want to hash the password again, so we just return next()
     next();
 }) // here we dont use callback because callbacks dont have any context
 
