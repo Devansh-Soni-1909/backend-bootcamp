@@ -76,7 +76,35 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 };
 
+
+const deleteFromCloudinary = async (fileUrl) => {
+    try {
+        if (!fileUrl) {
+            throw new Error("Missing Cloudinary file URL.");
+        }
+
+        // Extract the public ID from the URL (filename without extension)
+        const parts = fileUrl.split('/');
+        const fileWithExtension = parts[parts.length - 1]; // e.g., abc123.jpg
+        const publicId = fileWithExtension.split('.')[0];  // e.g., abc123
+
+        const result = await cloudinary.uploader.destroy(publicId);
+
+        if (result.result !== 'ok') {
+            console.warn('Cloudinary deletion returned non-ok status:', result);
+        }
+
+        return result;
+
+    } catch (error) {
+        console.error('Error deleting file from Cloudinary:', error);
+        return null;
+    }
+};
+
 export default uploadOnCloudinary;
+export { deleteFromCloudinary };
+
 
 
 

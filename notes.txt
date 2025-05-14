@@ -350,4 +350,19 @@ If an attacker steals it, they have access until it expires.
 
 If there's no refresh mechanism, you'd have to revoke and track tokens manually, which is hard.
 
+
 This is why refresh tokens exist: they let you combine short access with long sessions.
+
+we can also create an array in the users model to store the subscribers of the channel but since it can be large so we cannot use array because a single deletion from array can increase complexity
+## Understanding the Subscription Schema
+### Fields:
+    - Subscriber
+    - Channel
+- There are two things to be understood first, first is a channel which needs to be subrcibed, and other is a user who will subscribe.
+- Now any time we we would either require to find, how many people have subsrribed to a channel, or how many channels a user has subscribed to.
+- This implies that, each subscriber should have the list of channels subscribed to, and each channel should have list of all its subscribers.
+- To do this perfectly, we can create a separate model, where each time we will have a document(entry) in it, which will refer to a channel, and a subscriber.
+- Now by doing this, whenever we need to find the subscribers count of a channel, we can count the number of documents where that channel is present, and obviosuly we are adding a document when a new subscriber is subscribing to the channel.
+- And when we want to know that, how many channels a user has subscribed to, we will simply count the number of documents where is that user is present, means he has subscribed a new channel.
+- A channel will added only when it gets a new subscriber, and the user will be added only when he subscribes to a new channel.
+- That is the reason we create a separate model to handle each channel, and its subscriber as a single document, to handle the the relationship between a channel and a user and vice versa.
