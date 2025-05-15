@@ -5,6 +5,7 @@ import uploadOnCloudinary from "../utils/cloudinary.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import jwt from 'jsonwebtoken';
 import { deleteFromCloudinary } from "../utils/cloudinary.js";
+import mongoose from "mongoose";
 
 const generateAccessAndRefreshTokens = async (userId) => {
     try {
@@ -338,6 +339,18 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     if (!coverImageLocalPath) {
         throw new ApiError(400, "coverImage file is missing")
     }
+
+    // Fetch current user to get old avatar URL
+    const currentUser = await User.findById(req.user?._id);
+    const oldCoverImageUrl = currentUser?.coverImage;
+
+    // Delete old avatar from Cloudinary (if exists)
+    if (oldCoverImageUrl) {
+        await deleteFromCloudinary(oldCoverImageUrl);
+    }
+
+
+
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
     if (!coverImage.url) {
         throw new ApiError(400, "Failed to upload coverImage")
@@ -443,6 +456,61 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 
 })
 
+const getWatchHistory = asyncHandler(async (req,res)=>{
+    const user = await User.aggregate([
+        {
+           $match:{
+               _id : new mongoose.Types.ObjectId(req.user._id)
+           }
+        },
+        {
+            $lookup:{
+                from :"videos",
+                localField:"watchHistory",
+                foreignField:"_id",
+                as:"watchHistory",
+                // subpipeline because inside video model owner field is present which is again referencing user model
+                pipeline:[
+
+
+                    {
+                        $lookup:{
+                            from:"users",
+                            localField:"owner",
+                            foreignField:"_id",
+                            as:"owner",
+                            pipeline:[
+                                {
+                                    $project:{
+                                        fullname:1,
+                                        avatar:1,
+                                        username: 1
+                                    }
+                                }
+                            ]
+
+                        }
+                    },
+                    {
+                        $addFields:{
+                            owner : {
+                                $first : "$owner" // since we will receive an array of documents so in this pipeline we extract the first document of the array using $first
+                            }
+                        }
+                    }
+
+                ]
+
+        
+            }
+        }
+    ])
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200,user[0].watchHistory,"watch history fetched successfully"))
+})
+
 
 
 
@@ -457,3 +525,5 @@ export { getCurrentUser };
 export { updateAccountDetails };
 export { updateUserAvatar };
 export { updateUserCoverImage };
+export {getUserChannelProfile};
+export {getWatchHistory};
